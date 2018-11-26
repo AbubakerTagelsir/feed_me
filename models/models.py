@@ -17,23 +17,12 @@ class Meal(models.Model):
 
 	meal_category = fields.Char(related= lunch.product.category)
 
-
-	"""docstring for Meal"models.Modelf 
-
-	_na__init__(self, arg):
-		super(Meal,models.Model._
-
-		_na_init__()
-		self.arg = arg
 		
 
-		
-
-# class feed_me(models.Model):
-class FeedOrder(models.Model):
+class Order(models.Model):
 
     _inherit = ['sale.order']
-    
+    _namev= feed.order
     customer_id = fields.Many2one('feed.customer', "Reference")
     resturant_id = fields.Many2one('feed.resturant', "Reference")
     
@@ -86,8 +75,17 @@ class Resturant(models.Model):
 	active = fields.Boolean(compute="is_active_now")
 	
 	#add categories of food??
-
-
+	class FeedDelivery(models.model):
+		_name = 'feed.delivery'
+	delivery_man_name = fields.Char()
+	delivery_man_phone = fields.Integer()
+ 	delivery_man_location = fields.Text()
+	delivery_man_status = fields.Selection(
+        string='Status',
+        selection=[('active', 'Active'), ('unactive', 'Unactive')],
+	    default = 'Unactive')
+	delivery_man_history= fields.char(related="feed.order.order_id")
+		
 	
 	def is_active_now(self):
 		time = fields.datetime.now()
