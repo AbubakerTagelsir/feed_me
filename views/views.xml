@@ -15,34 +15,60 @@
     
 -->
     <!-- actions opening views on models -->
-    
-    <!-- <record model="ir.actions.act_window" id="resturant.action_window">
-      <field name="name">resturant window</field>
-      <field name="res_model">feed.resturant</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-     -->
-
-    <!-- server action to the one above -->
-    
-   <!--  <record model="ir.actions.server" id="resturant.action_server">
-      <field name="name">feed_me server</field>
-      <field name="model_id" ref="model_feed_me_feed_me"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
+    <record id="view_sale_order_form" model="ir.ui.view">
+      <field name="name">view.sale.order.form</field>
+      <field name="model">sale.order</field>
+       <field name="inherit_id" ref="sale.view_order_form" />
+      <field name="arch" type="xml">
+          
+          <field name="partner_id" 
+          position="after">
+          
+          <field name="restaurant_id" readonly="0"/>
+          
+          
+          </field>
+          
       </field>
-    </record> -->
+    </record>
+
+    <record id="view_restaurant_profile" model="ir.ui.view">
+        <field name="name">view.res.company.form</field>
+        <field name="model">res.company</field>
+         <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            
+            <field name="name"
+            position="after">
+            
+            <div name="buttons" class="oe_right oe_button_box">
+              <button id="button_id" 
+                name="%(product.product_template_action)d"
+                type="action"
+                class="oe_stat_button"
+                icon="fa-tasks"
+                help="view stock info">
+                <!-- <field name="stock" string="Stock Value" widget="statinfo"/> -->
+              </button>
+            </div>
+            
+            </field>
+            
+        </field>
+    </record>
+
     
- 
+    
+    
+
+  
+    
+   
     <!-- Top menu item -->
-    
-    <menuitem name="feed_me" id="feed_me.menu_root"/>
-    
+    <menuitem name="Restaurants" id="restaurants_menu" 
+              action="base.action_res_company_form"/>
+<!--     <menuitem name="feed_me" id="feed_me.menu_root"/>
+ -->    
     <!-- menu categories -->
     <!--
     <menuitem name="Menu 1" id="feed_me.menu_1" parent="feed_me.menu_root"/>
