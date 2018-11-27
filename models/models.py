@@ -27,7 +27,6 @@ class Order(models.Model):
 
 	# selected_meal_items
 	resturantMeal_id = fields.Many2one('feed.resturant.meal')
-	meal_price = fields.Float(related="res_meal_id.price")
 	meal_perparation_time=fields.Float(related="res_meal_id.meal_preparation_time")
 	meal_quantity=fields.Integer("Quantity")
 
@@ -40,7 +39,7 @@ class Order(models.Model):
 	    total = 0.00
 	    for i in self:
 	        for meal in i.resturantMeal_id:
-	            total += meal.meal_price * meal.meal_quantity
+	            total += meal.price * meal.meal_quantity
 	        i.total_order_price = total
 
 
@@ -70,30 +69,30 @@ class Resturant(models.Model):
 	active = fields.Boolean(compute="is_active_now")
 	#add categories of food??
 
-	class Delivery(models.model):
+	class Delivery(models.Model):
 		_name = 'feed.delivery'
-	delivery_man_name = fields.Char()
-	delivery_man_phone = fields.Integer()
- 	delivery_man_location = fields.Text()
-	delivery_man_status = fields.Selection(
-        string='Status',
-        selection=[('active', 'Active'), ('unactive', 'Unactive')],
-	    default = 'Unactive')
-	order_id = fields.Many2one('feed.order')
-	delivery_man_history= fields.char(related="order_id.id")
+		delivery_man_name = fields.Char()
+		delivery_man_phone = fields.Integer()
+		delivery_man_location = fields.Text()
+		delivery_man_status = fields.Selection(
+	        string='Status',
+	        selection=[('active', 'Active'), ('unactive', 'Unactive')],
+		    default = 'Unactive')
+		order_id = fields.Many2one('feed.order')
+		delivery_man_history= fields.Char(related="order_id.name")
+			
 		
-	
-	def is_active_now(self):
-		time = fields.datetime.now()
-		self.active = time >= self.active_from and time <= self.active_to
+		def is_active_now(self):
+			time = fields.datetime.now()
+			self.active = time >= self.active_from and time <= self.active_to
 
 
-	def get_preparation_time(self):
-		total = 0
-		for order in self:
-			total+= order.ResturantMeal_id.meal_preparation_time
+		def get_preparation_time(self):
+			total = 0
+			for order in self:
+				total+= order.ResturantMeal_id.meal_preparation_time
 
-		self.order_preparation_time = total
+			self.order_preparation_time = total
 
 
 class ResturantMeal(models.Model):
