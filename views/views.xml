@@ -1,32 +1,31 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    <!--
-    <record model="ir.ui.view" id="feed_me.list">
-      <field name="name">feed_me list</field>
-      <field name="model">feed_me.feed_me</field>
+    
+   <!--  <record model="ir.ui.view" id="resturant.list">
+      <field name="name">resturant list</field>
+      <field name="model">feed.resturant</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
+          <field name="location"/>
         </tree>
       </field>
     </record>
-    -->
-
+    
+-->
     <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="feed_me.action_window">
-      <field name="name">feed_me window</field>
-      <field name="res_model">feed_me.feed_me</field>
+    
+    <!-- <record model="ir.actions.act_window" id="resturant.action_window">
+      <field name="name">resturant window</field>
+      <field name="res_model">feed.resturant</field>
       <field name="view_mode">tree,form</field>
     </record>
-    -->
+     -->
 
     <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="feed_me.action_server">
+    
+   <!--  <record model="ir.actions.server" id="resturant.action_server">
       <field name="name">feed_me server</field>
       <field name="model_id" ref="model_feed_me_feed_me"/>
       <field name="state">code</field>
@@ -37,13 +36,13 @@
           "res_model": self._name,
         }
       </field>
-    </record>
-    -->
-
+    </record> -->
+    
+ 
     <!-- Top menu item -->
-    <!--
+    
     <menuitem name="feed_me" id="feed_me.menu_root"/>
-    -->
+    
     <!-- menu categories -->
     <!--
     <menuitem name="Menu 1" id="feed_me.menu_1" parent="feed_me.menu_root"/>
