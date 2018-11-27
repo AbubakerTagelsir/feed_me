@@ -13,7 +13,6 @@ class Meal(models.Model):
 	# _inherit = ['lunch.product']
 	# meal_category = fields.Char(related= lunch.product.category)
 
-	print("----------------------meal --------------------")
 
 		
 
@@ -32,9 +31,6 @@ class Order(models.Model):
 	meal_perparation_time=fields.Float(related="res_meal_id.meal_preparation_time")
 	meal_quantity=fields.Integer("Quantity")
 
-
-	total_order_price = fields.Float("Total Order Price", compute="_get_the_order_price")
-	print("----------------------order --------------------")
 
 
 	@api.multi
@@ -73,8 +69,20 @@ class Resturant(models.Model):
 	active_to = fields.Datetime()
 	active = fields.Boolean(compute="is_active_now")
 	#add categories of food??
-	print("----------------------resturant --------------------")
 
+	class Delivery(models.model):
+		_name = 'feed.delivery'
+	delivery_man_name = fields.Char()
+	delivery_man_phone = fields.Integer()
+ 	delivery_man_location = fields.Text()
+	delivery_man_status = fields.Selection(
+        string='Status',
+        selection=[('active', 'Active'), ('unactive', 'Unactive')],
+	    default = 'Unactive')
+	order_id = fields.Many2one('feed.order')
+	delivery_man_history= fields.char(related="order_id.id")
+		
+	
 	def is_active_now(self):
 		time = fields.datetime.now()
 		self.active = time >= self.active_from and time <= self.active_to
@@ -98,7 +106,6 @@ class ResturantMeal(models.Model):
 	price = fields.Float()
 	#add categories of food??
 
-	print("----------------------ResturantMeal --------------------")
 
 	
 
