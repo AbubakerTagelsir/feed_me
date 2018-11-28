@@ -15,6 +15,18 @@
     
 -->
     <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="new_order_action_form">
+        <field name="name">New Order</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_restaurant_id':active_id}</field>
+    </record> 
+
+
+
     <record id="view_sale_order_form" model="ir.ui.view">
       <field name="name">view.sale.order.form</field>
       <field name="model">sale.order</field>
@@ -24,13 +36,14 @@
           <field name="partner_id" 
           position="after">
           
-          <field name="restaurant_id" readonly="0"/>
+          <field name="restaurant_id" readonly="1"/>
           
           
           </field>
           
       </field>
     </record>
+
 
     <record id="view_restaurant_profile" model="ir.ui.view">
         <field name="name">view.res.company.form</field>
@@ -40,14 +53,29 @@
             
             <field name="name"
             position="after">
-            
+            <div>
+                <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                  
+                    <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
+                </button>
+            </div>
             <div name="buttons" class="oe_right oe_button_box">
+
+               <button name="%(new_order_action_form)d"
+                      string="New Order"
+                      type="action"
+                      default_focus="0"
+                      icon="fa-plus-circle"
+                      class="oe_stat_button"
+                      help="Click here to make an order from this resturant" />
+
               <button id="button_id" 
                 name="%(product.product_template_action)d"
                 type="action"
+                string="Menu"
                 class="oe_stat_button"
-                icon="fa-tasks"
-                help="view stock info">
+                icon="fa-cutlery"
+                help="view menu info">
                 <!-- <field name="stock" string="Stock Value" widget="statinfo"/> -->
               </button>
             </div>
@@ -57,9 +85,9 @@
         </field>
     </record>
 
-    
-    
-    
+    <record id="base.action_res_company_form" model="ir.actions.act_window">
+           <field name="view_mode">kanban,form</field>
+    </record>
 
   
     
