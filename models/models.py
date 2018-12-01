@@ -25,48 +25,9 @@ class Restaurant(models.Model):
 class Order(models.Model):
 	_inherit = 'sale.order'
 	restaurant_id = fields.Many2one('res.company', "Restaurant")
-	# customer_id = fields.Many2one('feed.customer', "Reference")
-	# order_location=fields.Text(string='Location',)
-
-# 	# selected_meal_items
-# 	resturant_meal_id = fields.Many2one('feed.restaurant.meal')
-# 	meal_preparation_time=fields.Float(related="resturant_meal_id.meal_preparation_time")
-# 	meal_quantity=fields.Integer("Quantity")
-# 	delivery = fields.Many2one('feed.delivery')
+	
 
 
-# 	@api.multi
-# 	@api.onchange('resturant_meal_id')
-# 	def _get_total_order_price(self): 
-# 	    print(self)   
-# 	    total = 0.00
-# 	    for i in self:
-# 	        for meal in i.resturant_meal_id:
-# 	            total += meal.price * meal.meal_quantity
-# 	        i.total_order_price = total
-
-
-# 	total_order_time = fields.Float("Total Order time", compute="_get_the_order_time")
-
-# 	@api.multi
-# 	@api.onchange('resturant_meal_id')
-# 	def _get_total_order_time(self): 
-# 	    print(self)   
-# 	    total_time = 0.00
-# 	    for i in self:
-# 	        for meal in i.resturant_meal_id:
-# 	            total_time += meal.meal_preparation_time * meal.meal_quantity
-# 	        i.total_order_time = total_time
-
-
-# class Restaurant(models.Model):
-# 	_inherit = 'res.company'
-# 	description = fields.Text()
-# 	name = fields.Char()
-# 	restaurant_pic = fields.Binary("Image" , attachment=True)
-# 	location = fields.Text()
-# 	menu = fields.One2many('feed.restaurant.meal', 'restaurant_id','Menu')
-# 	current_orders = fields.One2many('sale.order', 'restaurant_id','Order')
 # 	#odoo hr schedule
 # 	active_from = fields.Datetime()
 # 	active_to = fields.Datetime()

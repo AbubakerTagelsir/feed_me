@@ -32,14 +32,89 @@
       <field name="model">sale.order</field>
        <field name="inherit_id" ref="sale.view_order_form" />
       <field name="arch" type="xml">
-          
-          <field name="partner_id" 
-          position="after">
-          
-          <field name="restaurant_id" readonly="1"/>
-          
-          
+
+          <button name="action_quotation_send" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </button>
+          <xpath expr="//notebook/page[1]/field[@name='order_line']/form/group/group[2]/field[@name='tax_id']" position="attributes">
+            <attribute name='invisible'>1</attribute>
+          </xpath>
+          <field name="partner_id" position="after">
+              <field name="restaurant_id" readonly="1"/>
           </field>
+          <field name="team_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="client_order_ref" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="payment_term_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="fiscal_position_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="validity_date" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="tax_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="price_subtotal" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          
+      </field>
+    </record>
+
+
+    <record id="view_product_form" model="ir.ui.view">
+      <field name="name">view.product.form</field>
+      <field name="model">product.template</field>
+       <field name="inherit_id" ref="product.product_template_only_form_view" />
+      <field name="arch" type="xml">
+          <xpath expr="//form" position="attributes">
+                <attribute name="name">Meal</attribute>
+          </xpath>
+          <label for="name" position="attributes">
+            <attribute name="string">Meal</attribute>
+          </label>
+          <button name="action_view_sales" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </button>
+          
+          <field name="name" position="attributes">
+            <attribute name="placeholder">Meal Name</attribute>
+          </field>
+
+
+          <field name="sale_ok" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <label for="sale_ok" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </label>
+          <field name="purchase_ok" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <label for="purchase_ok" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </label>
+          <field name="barcode" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="type" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <field name="default_code" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </field>
+          <page name="sales" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </page>
+          <page name="invoicing" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </page>
           
       </field>
     </record>
