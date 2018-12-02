@@ -25,8 +25,6 @@
         <field name="context">{'default_restaurant_id':active_id}</field>
     </record> 
 
-
-
     <record id="view_sale_order_form" model="ir.ui.view">
       <field name="name">view.sale.order.form</field>
       <field name="model">sale.order</field>
@@ -36,8 +34,33 @@
           <button name="action_quotation_send" position="attributes">
             <attribute name="invisible">1</attribute>
           </button>
-          <xpath expr="//notebook/page[1]/field[@name='order_line']/form/group/group[2]/field[@name='tax_id']" position="attributes">
+          <button name="action_cancel" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </button>
+         
+          <xpath expr="//form[1]/header/button[5]" position="replace">
+            <button name='submit_order' string='Confirm Order' type="object" attrs="{'invisible': [('order_state', '!=', 'draft')]}"></button>
+            <button name='accept_order' string='Accept Order' type="object" attrs="{'invisible': [('order_state', '!=', 'submitted')]}"></button>
+            <button name='deliver_order' string='Recieve Order' type="object" attrs="{'invisible': [('order_state', '!=', 'accepted')]}"></button>
+             <button name='cancel_order' string='Cancel' type="object" attrs="{'invisible': [('order_state', '=', 'canceled')]}"></button>
+          </xpath>
+          
+         
+          <xpath expr="//form[1]/header/field[1]" position="attributes">
+             <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//form[1]/header/field[1]" position="after">
+             <field name="order_state" widget="statusbar" statusbar_visible="draft,submitted,accepted,delivered,canceled"/>
+          </xpath>
+
+          <xpath expr="//notebook/page[1]/field[1]/tree/field[13]" position="attributes">
             <attribute name='invisible'>1</attribute>
+          </xpath>
+           <xpath expr="//notebook/page[1]/field[1]/tree/field[15]" position="attributes">
+            <attribute name='invisible'>1</attribute>
+          </xpath>
+          <xpath expr="//notebook/page[1]/field[1]/tree/field[3]" position="attributes">
+            <attribute name='string'>Meal</attribute>
           </xpath>
           <field name="partner_id" position="after">
               <field name="restaurant_id" readonly="1"/>
@@ -173,10 +196,11 @@
 <!--     <menuitem name="feed_me" id="feed_me.menu_root"/>
  -->    
     <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="feed_me.menu_1" parent="feed_me.menu_root"/>
-    <menuitem name="Menu 2" id="feed_me.menu_2" parent="feed_me.menu_root"/>
-    -->
+    
+   <!--  <menuitem name="Orders" id="orders_menu" parent="restaurants_menu"
+      action="my_orders_action_form"/> -->
+<!--     <menuitem name="Menu 2" id="feed_me.menu_2" parent="feed_me.menu_root"/>
+ -->    
     <!-- actions -->
     <!--
     <menuitem name="List" id="feed_me.menu_1_list" parent="feed_me.menu_1"

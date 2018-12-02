@@ -25,7 +25,23 @@ class Restaurant(models.Model):
 class Order(models.Model):
 	_inherit = 'sale.order'
 	restaurant_id = fields.Many2one('res.company', "Restaurant")
-	
+	order_state = fields.Selection(
+		selection=[('draft', 'Draft'), ('submitted', 'Submitted'), ('accepted', "Accepted"), ('delivered', "Delivered"), ('canceled', "Canceled")],
+        default='draft')
+
+
+
+	def submit_order(self):
+	    self.order_state = 'submitted'
+
+	def accept_order(self):
+	    self.order_state = 'accepted'
+
+	def cancel_order(self):
+	    self.order_state = 'canceled'
+
+	def deliver_order(self):
+	    self.order_state = 'delivered'
 
 
 # 	#odoo hr schedule
@@ -38,12 +54,7 @@ class Order(models.Model):
 # 		time = fields.datetime.now()
 # 		self.active = time >= self.active_from and time <= self.active_to
 
-# class RestaurantSection(models.Model):
-# 	_name = 'feed.restaurant.section'
-# 	name = fields.Char()
-# 	restaurant_id = fields.Many2one('res.company')
-# 	#capacity
-	
+
 
 # class Delivery(models.Model):
 # 	_name = 'feed.delivery'
@@ -60,15 +71,6 @@ class Order(models.Model):
 	
 
 
-# class RestaurantMeal(models.Model):
-# 	_name = 'feed.restaurant.meal'
-# 	_inherit = 'feed.meal'
-# 	description = fields.Text()
-# 	name = fields.Char()
-# 	restaurant_id = fields.Many2one('res.company')
-# 	meal_preparation_time = fields.Float()
-# 	price = fields.Float()
-# 	#add categories of food??
 
 
 	
