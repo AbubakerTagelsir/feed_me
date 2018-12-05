@@ -25,6 +25,34 @@
         <field name="context">{'default_restaurant_id':active_id}</field>
     </record> 
 
+     <record model="ir.actions.act_window" id="product.product_template_action">
+        <field name="name">Restaurant Menu</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="target">current</field>
+        <field name="domain">[('restaurant_id', '=', active_id)]</field>
+    </record> 
+
+    <record model="ir.actions.act_window" id="resturant_schedule_action_form">
+        <field name="name">Schedule</field>
+        <field name="res_model">resource.calendar</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record> 
+
+    <record id="action_my_order_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">my orders</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_mode">kanban, tree, form</field>
+      <field name="view_type">form</field>
+      <field name="target">current</field>
+      <field name="domain">[('partner_id', '=', uid)]</field>
+
+  </record>
+
     <record id="view_sale_order_form" model="ir.ui.view">
       <field name="name">view.sale.order.form</field>
       <field name="model">sale.order</field>
@@ -94,23 +122,23 @@
     <record id="view_product_form" model="ir.ui.view">
       <field name="name">view.product.form</field>
       <field name="model">product.template</field>
-       <field name="inherit_id" ref="product.product_template_only_form_view" />
+      <field name="inherit_id" ref="product.product_template_only_form_view" />
       <field name="arch" type="xml">
           <xpath expr="//form" position="attributes">
-                <attribute name="name">Meal</attribute>
+            <attribute name="name">Meal</attribute>
           </xpath>
           <label for="name" position="attributes">
             <attribute name="string">Meal</attribute>
           </label>
+          <field name="categ_id" position="after">
+            <field name="restaurant_id" string="Restaurant"/>
+          </field>
           <button name="action_view_sales" position="attributes">
             <attribute name="invisible">1</attribute>
           </button>
-          
           <field name="name" position="attributes">
             <attribute name="placeholder">Meal Name</attribute>
           </field>
-
-
           <field name="sale_ok" position="attributes">
             <attribute name="invisible">1</attribute>
           </field>
@@ -148,24 +176,20 @@
         <field name="model">res.company</field>
          <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
-            
-            <field name="name"
-            position="after">
+            <field name="name" position="after">
             <div>
-                <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                  
-                    <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
-                </button>
+              <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+              <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
+              </button>
             </div>
             <div name="buttons" class="oe_right oe_button_box">
-
-               <button name="%(new_order_action_form)d"
-                      string="New Order"
-                      type="action"
-                      default_focus="0"
-                      icon="fa-plus-circle"
-                      class="oe_stat_button"
-                      help="Click here to make an order from this resturant" />
+              <button name="%(new_order_action_form)d"
+                string="New Order"
+                type="action"
+                default_focus="0"
+                icon="fa-plus-circle"
+                class="oe_stat_button"
+                help="Click here to make an order from this resturant" />
 
               <button id="button_id" 
                 name="%(product.product_template_action)d"
@@ -173,32 +197,33 @@
                 string="Menu"
                 class="oe_stat_button"
                 icon="fa-cutlery"
-                help="view menu info">
-                <!-- <field name="stock" string="Stock Value" widget="statinfo"/> -->
+                help="view menu info"
+                >
               </button>
             </div>
-            
             </field>
-            
+            <field name="partner_id"  position="after">
+                 <field name="resource_calendar_id" string="Working Hours"/>
+            </field>
         </field>
     </record>
 
     <record id="base.action_res_company_form" model="ir.actions.act_window">
-           <field name="view_mode">kanban,form</field>
+        <field name="view_mode">kanban,form</field>
     </record>
 
   
     
    
     <!-- Top menu item -->
-    <menuitem name="Restaurants" id="restaurants_menu" 
-              action="base.action_res_company_form"/>
+    <menuitem name="Restaurants" id="restaurants_menu" action="base.action_res_company_form"/>
+    <menuitem name="My Orders" id="my_order_menu" action="action_my_order_act_window"/>
+
 <!--     <menuitem name="feed_me" id="feed_me.menu_root"/>
  -->    
     <!-- menu categories -->
     
-   <!--  <menuitem name="Orders" id="orders_menu" parent="restaurants_menu"
-      action="my_orders_action_form"/> -->
+    
 <!--     <menuitem name="Menu 2" id="feed_me.menu_2" parent="feed_me.menu_root"/>
  -->    
     <!-- actions -->

@@ -7,18 +7,19 @@ from odoo import models, fields, api
 # 	_inherit = ['res.partner']
 # 	customer_previous_orders = fields.One2many('sale.order','customer_id')
 
-# class Meal(models.Model):
-# 	_name = 'feed.meal'
-# 	# _inherit = ['lunch.product']
-# 	# meal_category = fields.Char(related= lunch.product.category)
+class Meal(models.Model):
+	_inherit = 'product.template'
+	restaurant_id = fields.Many2one('res.company')
 
 
 class Restaurant(models.Model):
 	_inherit = 'res.company'
 	active = fields.Boolean("Status", default=True)	
+	resource_calendar_id = fields.Many2one(help="Restaurant's working schedule.")
 
 	def toggle_active(self):
 		self.active = not self.active
+
 
 
 # class feed_me(models.Model):
