@@ -21,17 +21,21 @@ class Restaurant(models.Model):
 		self.active = not self.active
 
 
-
-# class feed_me(models.Model):
 class Order(models.Model):
 	_inherit = 'sale.order'
 	restaurant_id = fields.Many2one('res.company', "Restaurant")
 	order_state = fields.Selection(
 		selection=[('draft', 'Draft'), ('submitted', 'Submitted'), ('accepted', "Accepted"), ('delivered', "Delivered"), ('canceled', "Canceled")],
         default='draft')
+	current_user = fields.Many2one('res.users','Current User', default=lambda self: self._uid)
+	delivery_id = fields.Many2one('feed.delivery')
 
-
-
+	@api.onchange('order_state')
+	def test(self):
+		print("----------------------------------------------")
+		print("----------------------------------------------")
+		print("----------------------------------------------")
+		print(self.current_user.id)
 	def submit_order(self):
 	    self.order_state = 'submitted'
 
@@ -55,18 +59,22 @@ class Order(models.Model):
 # 		time = fields.datetime.now()
 # 		self.active = time >= self.active_from and time <= self.active_to
 
+class Claim(models.Model):
+	_name = 'feed.claim'
+	name = fields.Char(compute="_get_name")
+	claim_type = fields.Selection(
+				selection=[('restaurant', 'Restaurant'), ('delivery', 'Delivery'), ('other', "Other")]
+				)
+	restaurant_id = fields.Many2one('res.company')
+	delivery_id = fields.Char()
+	description= fields.Text(help="Write your claim here")
 
 
-# class Delivery(models.Model):
-# 	_name = 'feed.delivery'
-# 	delivery_man_name = fields.Char()
-# 	delivery_man_phone = fields.Integer()
-# 	delivery_man_location = fields.Text()
-# 	delivery_man_status = fields.Selection(
-#         string='Status',
-#         selection=[('active', 'Active'), ('unactive', 'Unactive')],
-# 	    default = 'Unactive')
-# 	current_orders = fields.One2many('sale.order', 'delivery')
+	@api.one
+	def _get_name(self):
+		self.name = "CL00" + str(self.id)
+
+
 		
 	
 	

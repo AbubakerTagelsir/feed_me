@@ -47,11 +47,62 @@
       <field name="name">my orders</field>
       <field name="res_model">sale.order</field>
       <field name="view_mode">kanban, tree, form</field>
-      <field name="view_type">form</field>
+      <field name="view_type">tree</field>
       <field name="target">current</field>
-      <field name="domain">[('partner_id', '=', uid)]</field>
+      <field name="domain">[('create_uid', '=', uid)]</field>
+    </record>
 
+  <record id="action_claim_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Claims</field>
+      <field name="res_model">feed.claim</field>
+      <field name="view_mode">list,form</field>
+      <field name="view_type">tree</field>
   </record>
+
+
+
+    <record model="ir.ui.view" id="cusclaim_list">
+      <field name="name">Claims list</field>
+      <field name="model">feed.claim</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="claim_type"/>
+        </tree>
+      </field>
+    </record>
+    
+
+   
+    
+
+  <record id="view_claim_form" model="ir.ui.view">
+      <field name="name">view.claim.form</field>
+      <field name="model">feed.claim</field>
+      <field name="arch" type="xml">
+          <form>
+            <sheet>
+              <group>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                      <field name="name" class="oe_inline"
+                              placeholder="Name" />
+                    </h1>
+                </div>
+               <field name="claim_type" string="About"/>
+               <field name="restaurant_id" string="Restaurant Name" attrs="{'invisible': [('claim_type', '!=', 'restaurant')]}" />
+               <field name="delivery_id" string="Delivery Name" attrs="{'invisible': [('claim_type', '!=', 'delivery')]}" />
+               <field name="description"/> 
+             </group>
+            </sheet>
+          </form>
+      </field>
+  </record>
+
+
+
 
     <record id="view_sale_order_form" model="ir.ui.view">
       <field name="name">view.sale.order.form</field>
@@ -89,10 +140,15 @@
           </xpath>
           <xpath expr="//notebook/page[1]/field[1]/tree/field[3]" position="attributes">
             <attribute name='string'>Meal</attribute>
+            <attribute name='domain'>[('restaurant_id', '=',active_id)]</attribute>
+            <attribute name='widget'>selection</attribute>
+
           </xpath>
           <field name="partner_id" position="after">
               <field name="restaurant_id" readonly="1"/>
           </field>
+           <field name="partner_id" position="attributes">
+        </field>
           <field name="team_id" position="attributes">
             <attribute name="invisible">1</attribute>
           </field>
@@ -218,6 +274,8 @@
     <!-- Top menu item -->
     <menuitem name="Restaurants" id="restaurants_menu" action="base.action_res_company_form"/>
     <menuitem name="My Orders" id="my_order_menu" action="action_my_order_act_window"/>
+    <menuitem name="Claims" id="claims_menu" action="action_claim_act_window"/>
+
 
 <!--     <menuitem name="feed_me" id="feed_me.menu_root"/>
  -->    
