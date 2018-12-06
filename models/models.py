@@ -66,7 +66,7 @@ class Claim(models.Model):
 				selection=[('restaurant', 'Restaurant'), ('delivery', 'Delivery'), ('other', "Other")]
 				)
 	restaurant_id = fields.Many2one('res.company')
-	delivery_id = fields.Char()
+	delivery_id = fields.Many2one('feed.delivery')
 	description= fields.Text(help="Write your claim here")
 
 
@@ -76,7 +76,22 @@ class Claim(models.Model):
 
 
 		
-	
+class Delivery(models.Model):
+	_name = 'feed.delivery'
+	name = fields.Char(compute="_get_name")
+	driver_name = fields.Char()
+	phone = fields.Char()
+	current_location = fields.Text()
+	delivery_status = fields.Selection(
+        string='Status',
+        selection=[('active', 'Active'), ('inactive', 'Inactive')],
+	    default = 'Unactive')
+	current_orders = fields.One2many('sale.order', 'delivery_id')
+
+	@api.one
+	def _get_name(self):
+		self.name = "00"+str(self.id)+self.driver_name
+
 	
 
 
