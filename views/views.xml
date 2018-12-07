@@ -52,6 +52,18 @@
       <field name="domain">[('create_uid', '=', uid)]</field>
     </record>
 
+
+    <record id="restaurant_orders_action_form" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">my orders</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_mode">kanban, tree, form</field>
+      <field name="view_type">tree</field>
+      <field name="target">current</field>
+      <field name="domain">[('restaurant_id', '=', active_id),('order_state', '=', 'submitted')]</field>
+
+    </record>
+
   <record id="action_claim_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
       <field name="name">Claims</field>
@@ -178,8 +190,10 @@
          
           <xpath expr="//form[1]/header/button[5]" position="replace">
             <button name='submit_order' string='Confirm Order' type="object" attrs="{'invisible': [('order_state', '!=', 'draft')]}"></button>
-            <button name='accept_order' string='Accept Order' type="object" attrs="{'invisible': [('order_state', '!=', 'submitted')]}"></button>
-            <button name='deliver_order' string='Recieve Order' type="object" attrs="{'invisible': [('order_state', '!=', 'accepted')]}"></button>
+            <button name='accept_order_by_restaurant' string='Accept Order' type="object" attrs="{'invisible': [('order_state', '!=', 'submitted')]}"></button>
+            <button name='accept_order_by_delivery' string='Accept Order' type="object" attrs="{'invisible': [('order_state', '!=', 'accepted')]}"></button>
+            <button name='deliver_order' string='Recieve Order' type="object" attrs="{'invisible': [('order_state', '!=', 'ontheway')]}"></button>
+            <button name='reject_order' string='Reject' type="object" attrs="{'invisible': [('order_state', '!=', 'submitted')]}"></button>
              <button name='cancel_order' string='Cancel' type="object" attrs="{'invisible': [('order_state', '=', 'canceled')]}"></button>
           </xpath>
           
@@ -188,7 +202,7 @@
              <attribute name="invisible">1</attribute>
           </xpath>
           <xpath expr="//form[1]/header/field[1]" position="after">
-             <field name="order_state" widget="statusbar" statusbar_visible="draft,submitted,accepted,delivered,canceled"/>
+             <field name="order_state" widget="statusbar"/>
           </xpath>
 
           <xpath expr="//notebook/page[1]/field[1]/tree/field[13]" position="attributes">
@@ -204,11 +218,12 @@
 
           </xpath>
           <field name="partner_id" position="after">
+             <field name="rejection_reason" attrs="{'invisible': [('order_state', '!=', 'rejected')]}"/>
               <field name="restaurant_id" readonly="1"/>
-              <field name="delivery_id"/>
+              <field name="delivery_id" attrs="{'invisible': [('order_state', 'in', ['draft','submitted','rejected','canceled'])]}"/>
           </field>
            <field name="partner_id" position="attributes">
-        </field>
+           </field>
           <field name="team_id" position="attributes">
             <attribute name="invisible">1</attribute>
           </field>
@@ -304,6 +319,14 @@
                 type="action"
                 default_focus="0"
                 icon="fa-plus-circle"
+                class="oe_stat_button"
+                help="Click here to make an order from this resturant" />
+
+              <button name="%(restaurant_orders_action_form)d"
+                string="Restaurant Orders"
+                type="action"
+                default_focus="0"
+                icon="fa-qrcode"
                 class="oe_stat_button"
                 help="Click here to make an order from this resturant" />
 

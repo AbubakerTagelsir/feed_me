@@ -12,11 +12,12 @@ class Meal(models.Model):
 	restaurant_id = fields.Many2one('res.company')
 
 
+
 class Restaurant(models.Model):
 	_inherit = 'res.company'
 	active = fields.Boolean("Status", default=True)	
 	resource_calendar_id = fields.Many2one(help="Restaurant's working schedule.")
-
+	assigned_orders = fields.One2many('sale.order','restaurant_id')
 	def toggle_active(self):
 		self.active = not self.active
 
@@ -25,11 +26,14 @@ class Order(models.Model):
 	_inherit = 'sale.order'
 	restaurant_id = fields.Many2one('res.company', "Restaurant")
 	order_state = fields.Selection(
-		selection=[('draft', 'Draft'), ('submitted', 'Submitted'), ('accepted', "Accepted"), ('delivered', "Delivered"), ('canceled', "Canceled")],
+		selection=[('draft', 'Draft'), ('submitted', 'Submitted'), ('accepted', "Accepted"),
+		 ('ontheway', "On the way"),('rejected', "Rejected"),
+		 ('delivered', "Delivered"), ('canceled', "Canceled")],
         default='draft')
 	current_user = fields.Many2one('res.users','Current User', default=lambda self: self._uid)
 	delivery_id = fields.Many2one('feed.delivery')
-
+	preparation_time = fields.Float()
+	rejection_reason = fields.Text('Order Rejected because')
 	@api.onchange('order_state')
 	def test(self):
 		print("----------------------------------------------")
@@ -37,10 +41,19 @@ class Order(models.Model):
 		print("----------------------------------------------")
 		print(self.current_user.id)
 	def submit_order(self):
-	    self.order_state = 'submitted'
+	    self.order_state = 'submitted'    
 
-	def accept_order(self):
+	def accept_order_by_restaurant(self):
 	    self.order_state = 'accepted'
+	    #TODO calculate the time needed by restaurant
+
+	def accept_order_by_delivery(self):
+	    self.order_state = 'ontheway'
+	    #TODO calculate the time needed by dlivery
+
+	def reject_order(self):
+	    self.order_state = 'rejected'
+
 
 	def cancel_order(self):
 	    self.order_state = 'canceled'
