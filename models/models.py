@@ -10,7 +10,12 @@ import datetime
 class Meal(models.Model):
 	_inherit = 'product.template'
 	restaurant_id = fields.Many2one('res.company')
+	
 
+
+class Customer(models.Model):
+	_inherit = 'res.partner'
+	cart_lines = fields.One2many('feed.cart', 'customer_id')
 
 
 class Restaurant(models.Model):
@@ -40,6 +45,8 @@ class Order(models.Model):
 	delivery_id = fields.Many2one('feed.delivery')
 	preparation_time = fields.Float()
 	rejection_reason = fields.Text('Order Rejected because')
+	cart_id = fields.Many2one('feed.cart')
+
 	@api.onchange('order_state')
 	def test(self):
 		print("----------------------------------------------")
@@ -111,12 +118,39 @@ class Delivery(models.Model):
 	def _get_name(self):
 		self.name = "00"+str(self.id)+self.driver_name
 
+class CartMeal(models.Model):
+	_name = 'feed.cart.meal'
+	meal_id = fields.Many2one('product.template')
+	qty = fields.Integer()
+	cart_id = fields.Many2one('feed.cart')
+
+class Cart(models.Model):
+	_name = 'feed.cart'
+	customer_id = fields.Many2one('res.users')
+	meals = fields.One2many('feed.cart.meal', 'cart_id')
+	total_price = fields.Float(compute="get_meals_total_price")
+
+	@api.onchange('meals')
+	def get_meals_total_price(self):
+		total = 0
+		for meal in self.meals:
+			total += meal.qty * meal.meal_id.list_price
+
+		self.total_price = total
+
+class User(models.Model):
+	_inherit = 'res.users'
+
+	@api.model 
+	def create(self, vals):
+		new_user = super(User,self).create(vals)
+		self.env['feed.cart'].create({
+			'customer_id': new_user.id,
+			})
+		return new_user
+
 	
 
-
-
-
-	
 
 
 

@@ -91,6 +91,32 @@
       <field name="domain">[('delivery_id', '=', active_id)]</field>
     </record>
 
+    <!-- <record id="action_cart_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">My Cart</field>
+      <field name="res_model">feed.cart</field>
+      <field name="view_mode">form</field>
+      <field name="view_type">form</field>
+  </record> -->
+
+          <record id="action_my_cart_act_window" model="ir.actions.server">
+            <field name="name">My Cart</field>
+            <field name="model_id" ref="feed_me.model_feed_cart"/>            
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'name': 'My Cart',
+                    'view_mode': 'form',
+                    'view_type': 'form',
+                    'res_model': 'feed.cart',
+                    'nodestroy': 'true',
+                    'res_id': uid,
+                    'views': [(False, 'form')],
+                    'view_id': 'ref="view_cart_form"',
+                }
+            </field>
+       </record> 
     <record model="ir.ui.view" id="cusclaim_list">
       <field name="name">Claims list</field>
       <field name="model">feed.claim</field>
@@ -358,23 +384,44 @@
           <xpath expr="//kanban/field[1]" position="before">
             <field name="logo"/>
           </xpath>
-         <xpath expr="//kanban/templates[1]/t[1]/div[1]/div[1]" position="inside">
+          <xpath expr="//kanban/templates[1]/t[1]/div[1]/div[1]" position="inside">
             <div class="o_kanban_image">
               <img t-att-src="kanban_image('res.company', 'logo')"/>
             </div>
-        </xpath>
+          </xpath>
+      </field>
+    </record>
 
-                    
-                    
-                
-            
+    <record id="view_cart_form" model="ir.ui.view">
+        <field name="name">view.cart.form</field>
+        <field name="model">feed.cart</field>
+        <field name="arch" type="xml">
+          <form>
+           <sheet>
+            <field name="meals" widget="one2many_list">
+              <tree editable="bottom">
+                <field name="meal_id"/>
+                <field name="qty"/>
+              </tree>
+            </field>
+           <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+             <label for="total_price"/>
+           </div>
+           <field name="total_price" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" />
+
+
+           </sheet>
+          </form>
         </field>
-      </record>
+    </record>
+
    
     <!-- Top menu item -->
     <menuitem name="Restaurants" id="restaurants_menu" action="base.action_res_company_form"/>
     <menuitem name="My Orders" id="my_order_menu" action="action_my_order_act_window"/>
     <menuitem name="Claims" id="claims_menu" action="action_claim_act_window"/>
+    <menuitem name="My Cart" id="mycart_menu" action="action_my_cart_act_window"/>
+    <menuitem name="Delivery" id="delivery_menu" action="action_delivery_act_window"/>
 
 
 <!--     <menuitem name="feed_me" id="feed_me.menu_root"/>
@@ -382,14 +429,11 @@
     <!-- menu categories -->
     
     
-    <menuitem name="Delivery" id="delivery_menu" action="action_delivery_act_window"/>
     
     <!-- actions -->
-    <!--
-    <menuitem name="List" id="feed_me.menu_1_list" parent="feed_me.menu_1"
-              action="feed_me.action_window"/>
-    <menuitem name="Server to list" id="feed_me" parent="feed_me.menu_2"
-              action="feed_me.action_server"/>
-    -->
+    
+<!--     <menuitem name="Server to list" id="feed_me" parent="feed_me.menu_2"
+              action="feed_me.action_server"/> -->
+    
   </data>
 </odoo>
