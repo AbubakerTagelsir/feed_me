@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-
+import datetime
 # class Customer(models.Model):
 # 	_name = 'feed.customer'
 # 	_inherit = ['res.partner']
@@ -18,7 +18,13 @@ class Restaurant(models.Model):
 	active = fields.Boolean("Status", default=True)	
 	resource_calendar_id = fields.Many2one(help="Restaurant's working schedule.")
 	assigned_orders = fields.One2many('sale.order','restaurant_id')
+
 	def toggle_active(self):
+		current_day = datetime.date.today().weekday()
+		print("----------------------------------------------")
+		print("----------------------------------------------")
+		print("----------------------------------------------")
+		print(current_day)
 		self.active = not self.active
 
 

@@ -308,12 +308,10 @@
          <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
             <field name="name" position="after">
-            <div>
-              <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-              <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
-              </button>
-            </div>
             <div name="buttons" class="oe_right oe_button_box">
+              <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
+              </button>
               <button name="%(new_order_action_form)d"
                 string="New Order"
                 type="action"
@@ -352,7 +350,26 @@
     </record>
 
   
-    
+     <record id="view_restaurant_kanban" model="ir.ui.view">
+        <field name="name">view.res.company.kanban</field>
+        <field name="model">res.company</field>
+         <field name="inherit_id" ref="base.view_res_company_kanban" />
+        <field name="arch" type="xml">
+          <xpath expr="//kanban/field[1]" position="before">
+            <field name="logo"/>
+          </xpath>
+         <xpath expr="//kanban/templates[1]/t[1]/div[1]/div[1]" position="inside">
+            <div class="o_kanban_image">
+              <img t-att-src="kanban_image('res.company', 'logo')"/>
+            </div>
+        </xpath>
+
+                    
+                    
+                
+            
+        </field>
+      </record>
    
     <!-- Top menu item -->
     <menuitem name="Restaurants" id="restaurants_menu" action="base.action_res_company_form"/>
