@@ -11,11 +11,28 @@ class Meal(models.Model):
 	_inherit = 'product.template'
 	restaurant_id = fields.Many2one('res.company')
 	
+	def add_to_cart(self):
+		cart_id = self.env['feed.cart'].search([('user_id','=', self.env.user.id)])
+		meals = cart_id.meals.search([
+			('meal_id','=',self.id),
+			('cart_id','=', cart_id.id)
+			])
+		
+		if len(meals.ids) > 0:
+			for meal in meals:
+				meal.qty += 1
+		else:
+			self.env['feed.cart.meal'].create({
+	                'meal_id':self.id,
+	                'qty':1,
+	                'price_unit':self.lst_price,
+	                'cart_id':cart_id.id,
+               })
 
 
 class Customer(models.Model):
 	_inherit = 'res.partner'
-	cart_lines = fields.One2many('feed.cart', 'customer_id')
+	# cart_lines = fields.One2many('feed.cart', 'customer_id')
 
 
 class Restaurant(models.Model):
@@ -126,9 +143,13 @@ class CartMeal(models.Model):
 
 class Cart(models.Model):
 	_name = 'feed.cart'
-	customer_id = fields.Many2one('res.users')
+	name = fields.Char(compute="_get_name")
+	user_id = fields.Many2one('res.users')
 	meals = fields.One2many('feed.cart.meal', 'cart_id')
 	total_price = fields.Float(compute="get_meals_total_price")
+
+	def _get_name(self):
+		self.name = "My Cart"
 
 	@api.onchange('meals')
 	def get_meals_total_price(self):
@@ -140,13 +161,13 @@ class Cart(models.Model):
 
 class User(models.Model):
 	_inherit = 'res.users'
-
+	cart_id = fields.Many2one('feed.cart')
 	@api.model 
 	def create(self, vals):
 		new_user = super(User,self).create(vals)
-		self.env['feed.cart'].create({
-			'customer_id': new_user.id,
-			})
+		new_user.cart_id = self.env['feed.cart'].create({
+			'user_id': new_user.id,
+			}).id
 		return new_user
 
 	

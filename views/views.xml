@@ -91,32 +91,27 @@
       <field name="domain">[('delivery_id', '=', active_id)]</field>
     </record>
 
-    <!-- <record id="action_cart_act_window" model="ir.actions.act_window">
-      <field name="type">ir.actions.act_window</field>
-      <field name="name">My Cart</field>
-      <field name="res_model">feed.cart</field>
-      <field name="view_mode">form</field>
-      <field name="view_type">form</field>
-  </record> -->
 
-          <record id="action_my_cart_act_window" model="ir.actions.server">
-            <field name="name">My Cart</field>
-            <field name="model_id" ref="feed_me.model_feed_cart"/>            
-            <field name="state">code</field>
-            <field name="code">
-                action = {
-                    'type': 'ir.actions.act_window',
-                    'name': 'My Cart',
-                    'view_mode': 'form',
-                    'view_type': 'form',
-                    'res_model': 'feed.cart',
-                    'nodestroy': 'true',
-                    'res_id': uid,
-                    'views': [(False, 'form')],
-                    'view_id': 'ref="view_cart_form"',
-                }
-            </field>
-       </record> 
+
+  <record id="action_my_cart_act_window" model="ir.actions.server">
+      <field name="name">My Cart</field>
+      <field name="model_id" ref="feed_me.model_feed_cart"/>            
+      <field name="state">code</field>
+      <field name="code">
+          action = {
+              'type': 'ir.actions.act_window',
+              'name': 'My Cart',
+              'view_mode': 'form',
+              'view_type': 'form',
+              'res_model': 'feed.cart',
+              'nodestroy': 'true',
+              'res_id': user.cart_id.id ,
+              'views': [(False, 'form')],
+              'view_id': 'ref="view_cart_form"',
+          }
+      </field>
+ </record> 
+
     <record model="ir.ui.view" id="cusclaim_list">
       <field name="name">Claims list</field>
       <field name="model">feed.claim</field>
@@ -389,6 +384,21 @@
               <img t-att-src="kanban_image('res.company', 'logo')"/>
             </div>
           </xpath>
+      </field>
+    </record>
+
+    <record id="view_product_kanban" model="ir.ui.view">
+        <field name="name">view.product.kanban</field>
+        <field name="model">product.template</field>
+         <field name="inherit_id" ref="product.product_template_kanban_view" />
+        <field name="arch" type="xml">
+          <xpath expr="//kanban/templates[1]/t[1]/div[1]/div[2]" position="after">
+           <a type="button">
+            <button name="add_to_cart" type="object" class="oe_highlight">
+              <span>Add To Cart</span>
+           </button>
+          </a>
+        </xpath>
       </field>
     </record>
 
