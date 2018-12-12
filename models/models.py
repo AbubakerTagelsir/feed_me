@@ -62,7 +62,6 @@ class Order(models.Model):
 	delivery_id = fields.Many2one('feed.delivery')
 	preparation_time = fields.Float()
 	rejection_reason = fields.Text('Order Rejected because')
-	cart_id = fields.Many2one('feed.cart')
 
 	@api.onchange('order_state')
 	def test(self):
@@ -135,11 +134,16 @@ class Delivery(models.Model):
 	def _get_name(self):
 		self.name = "00"+str(self.id)+self.driver_name
 
+
+
 class CartMeal(models.Model):
 	_name = 'feed.cart.meal'
 	meal_id = fields.Many2one('product.template')
 	qty = fields.Integer()
 	cart_id = fields.Many2one('feed.cart')
+
+
+
 
 class Cart(models.Model):
 	_name = 'feed.cart'
@@ -158,6 +162,31 @@ class Cart(models.Model):
 			total += meal.qty * meal.meal_id.list_price
 
 		self.total_price = total
+
+	def confirm_order(self):
+		orders = {}
+		for meal in self.meals:
+			restaurant = meal.meal_id.restaurant_id
+			if restaurant in orders.keys():
+				orders[restaurant].append({'meal':meal.meal_id.id,'qty':meal.qty})
+			else:
+				orders[restaurant] = [{'meal':meal.meal_id.id,'qty':meal.qty}]
+		print(orders)
+
+		for order in orders:
+			new_order = self.env['sale.order'].create({
+	                'restaurant_id':order.id,
+	                'partner_id': self.env.user.partner_id.id,
+               })
+			for line in orders[order]:
+				self.env['sale.order.line'].create({
+					'product_id':line["meal"],
+					'product_uom_qty':line["qty"],
+					'order_id':new_order.id,
+					})
+
+
+
 
 class User(models.Model):
 	_inherit = 'res.users'

@@ -81,7 +81,7 @@
       <field name="view_type">tree</field>
   </record>
 
-  <record id="action_current_order_act_window" model="ir.actions.act_window">
+  <record id="action_current_delivery_orders_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
       <field name="name">current orders</field>
       <field name="res_model">sale.order</field>
@@ -177,7 +177,7 @@
                 </div>
 
                 <div name="buttons" class="oe_right oe_button_box">
-                  <button name="%(action_current_order_act_window)d"
+                  <button name="%(action_current_delivery_orders_act_window)d"
                           string="Current Orders"
                           type="action"
                           default_focus="0"
@@ -403,26 +403,27 @@
     </record>
 
     <record id="view_cart_form" model="ir.ui.view">
-        <field name="name">view.cart.form</field>
-        <field name="model">feed.cart</field>
-        <field name="arch" type="xml">
-          <form>
-           <sheet>
+      <field name="name">view.cart.form</field>
+      <field name="model">feed.cart</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+           <button name="confirm_order" type="object" string="Confirm Order" class="oe_highlight"/>
+          </header>
+          <sheet>
             <field name="meals" widget="one2many_list">
               <tree editable="bottom">
                 <field name="meal_id"/>
                 <field name="qty"/>
               </tree>
             </field>
-           <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
              <label for="total_price"/>
-           </div>
-           <field name="total_price" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" />
-
-
-           </sheet>
-          </form>
-        </field>
+            </div>
+            <field name="total_price" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" />
+          </sheet>
+        </form>
+      </field>
     </record>
 
    
